@@ -14,10 +14,10 @@ async function connectDb(): Promise<Db> {
   if (cachedDb) return cachedDb;
 
   const mongoUri = process.env.MONGODB_URI;
-  const mongoDb = process.env.MONGODB_DB;
+  const mongoDb = process.env.MONGODB_DB || "SSEW";
 
-  if (!mongoUri || !mongoDb) {
-    throw new Error("Missing MongoDB environment variables");
+  if (!mongoUri) {
+    throw new Error("Missing MongoDB environment variable: MONGODB_URI");
   }
 
   const client = await getMongoClientPromise();
