@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SSEW Website (Next.js)
 
-## Getting Started
+Production-ready landing website for Sunita Sharma Embroidery Works (SSEW) with:
 
-First, run the development server:
+- Exact custom landing-page UI
+- Enquiry form implementation
+- Next.js API route for form submissions
+- MongoDB storage for enquiries
+- Blog system (public blog pages + admin publishing page)
+- Cloudflare R2 image storage for blog cover images
+- SEO metadata + JSON-LD + robots + sitemap
+
+## Tech Stack
+
+- Next.js 16 (App Router, TypeScript)
+- React 19
+- MongoDB Node driver
+- CSS (custom styles from provided UI)
+
+## Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create local environment file:
+
+```bash
+cp .env.example .env.local
+```
+
+On Windows PowerShell use:
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+3. Update `.env.local` with real values:
+
+- `MONGODB_URI`
+- `MONGODB_DB`
+- `NEXT_PUBLIC_SITE_URL`
+- `R2_ACCOUNT_ID`
+- `R2_ACCESS_KEY_ID`
+- `R2_SECRET_ACCESS_KEY`
+- `R2_BUCKET`
+- `R2_PUBLIC_BASE_URL`
+- `ADMIN_PASSWORD`
+- `ADMIN_SESSION_SECRET`
+
+4. Run development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### `POST /api/enquiries`
 
-## Learn More
+Stores enquiry data in MongoDB collection `enquiries`.
 
-To learn more about Next.js, take a look at the following resources:
+Required fields:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `name`
+- `businessName`
+- `phone`
+- `fabricType`
+- `designStyle`
+- `quantityRequired`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### `GET /api/blogs`
 
-## Deploy on Vercel
+Returns published blog posts.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### `POST /api/blogs`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Creates a blog post (requires authenticated admin session cookie).
+
+### `POST /api/upload-image`
+
+Uploads an image to Cloudflare R2 and returns a public URL (requires authenticated admin session cookie).
+
+### `POST /api/admin/login`
+
+Logs in admin using `ADMIN_PASSWORD` and sets an HTTP-only session cookie.
+
+### `POST /api/admin/logout`
+
+Clears admin session cookie.
+
+### `GET /api/admin/enquiries`
+
+Returns latest website enquiries for the admin dashboard.
+
+### `GET /api/admin/blogs`
+
+Returns all blog posts (including drafts) for admin dashboard.
+
+## Blog System
+
+- Public blog list: `/blog`
+- Public blog detail: `/blog/[slug]`
+- Admin publish page: `/admin/blog`
+
+Admin flow:
+
+1. Open `/admin/blog`
+2. Login with `ADMIN_PASSWORD`
+3. Use tabs for Publish Blog, Enquiries, and Blog Posts
+4. Submit to upload image to R2 and publish post
+
+## Production
+
+```bash
+npm run build
+npm start
+```
+
+## Notes
+
+- Replace placeholder contact details in the UI with actual business details.
+- Keep MongoDB credentials in environment variables only.

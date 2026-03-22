@@ -1,0 +1,269 @@
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+.slideContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.slide {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border: 2px solid;
+  border-radius: 20px;
+  padding: 22px;
+  background: linear-gradient(135deg, rgba(255, 248, 237, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
+  animation: slideInFade 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  gap: 20px;
+}
+
+.mediaWrap {
+  position: relative;
+  width: min(48%, 360px);
+  height: 100%;
+  min-height: 250px;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(201, 168, 76, 0.55);
+  background: #fff8ed;
+}
+
+.mediaImage {
+  object-fit: cover;
+}
+
+.mediaFallback {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #8a4455;
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.2), rgba(107, 26, 43, 0.15));
+}
+
+@keyframes slideInFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.slideContent {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: #2a1f1f;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #8a4455;
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.accentLine {
+  width: 60px;
+  height: 3px;
+  border-radius: 2px;
+  margin-top: 12px;
+  animation: accentExpand 0.6s ease-out;
+}
+
+@keyframes accentExpand {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 60px;
+    opacity: 1;
+  }
+}
+
+/* Dots Navigation */
+.dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background-color: #ddd;
+}
+
+.dot:hover {
+  transform: scale(1.2);
+}
+
+.dot.active {
+  transform: scale(1.3);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Arrow Controls */
+.control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border: 2px solid #C9A84C;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 5;
+  backdrop-filter: blur(5px);
+}
+
+.control:hover {
+  background: #C9A84C;
+  color: white;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.prev {
+  left: -50px;
+}
+
+.next {
+  right: -50px;
+}
+
+@media (max-width: 768px) {
+  .prev,
+  .next {
+    left: auto;
+    right: auto;
+    position: static;
+    transform: translateY(0);
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    margin: 0 8px;
+  }
+
+  .control:hover {
+    transform: scale(1.08);
+  }
+
+  .slide {
+    padding: 16px;
+    border-radius: 16px;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .mediaWrap {
+    width: 100%;
+    min-height: 170px;
+    height: 170px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .slideContent {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+/* Slide Counter */
+.counter {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8a4455;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 6px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  z-index: 5;
+}
+
+/* Play/Pause Toggle */
+.playToggle {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #C9A84C;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 5;
+  backdrop-filter: blur(5px);
+}
+
+.playToggle:hover {
+  background: #C9A84C;
+  color: white;
+  transform: scale(1.1);
+}
