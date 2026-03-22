@@ -62,11 +62,10 @@ export async function createGalleryItem(item: Omit<GalleryItem, "_id">): Promise
 
 export async function updateGalleryItem(
   id: string,
-  updates: Partial<GalleryItem>,
+  updates: Partial<Omit<GalleryItem, "_id">>,
 ): Promise<boolean> {
   const col = await getGalleryCollection();
-  const safeUpdates = { ...updates };
-  delete safeUpdates._id;
+  const safeUpdates: Partial<Omit<GalleryDoc, "_id">> = { ...updates };
   const result = await col.updateOne(
     { _id: new ObjectId(id) },
     {

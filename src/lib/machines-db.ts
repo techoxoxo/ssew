@@ -62,11 +62,10 @@ export async function createMachine(machine: Omit<Machine, "_id">): Promise<stri
 
 export async function updateMachine(
   id: string,
-  updates: Partial<Machine>,
+  updates: Partial<Omit<Machine, "_id">>,
 ): Promise<boolean> {
   const col = await getMachinesCollection();
-  const safeUpdates = { ...updates };
-  delete safeUpdates._id;
+  const safeUpdates: Partial<Omit<MachineDoc, "_id">> = { ...updates };
   const result = await col.updateOne(
     { _id: new ObjectId(id) },
     {
