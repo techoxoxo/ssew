@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useMemo, useState } from "react";
 import { HeroCarousel } from "./hero-carousel";
@@ -79,7 +80,14 @@ export default function LandingPage() {
       <nav className="nav">
         <div className="nav-logo">
           <div className="logo-ring">
-            <span>SS</span>
+            <Image
+              src="/Screenshot_4.png"
+              alt="SSEW logo"
+              width={48}
+              height={48}
+              className="logo-img"
+              priority
+            />
           </div>
           <div>
             <div className="brand-name">Sunita Sharma Embroidery Works</div>

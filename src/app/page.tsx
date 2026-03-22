@@ -15,12 +15,21 @@ export const metadata: Metadata = {
       "SSEW offers industrial shawl and scarf embroidery services with bulk capacity, custom designs, and trade pricing.",
     url: "/",
     type: "website",
+    images: [
+      {
+        url: "/Screenshot_4.png",
+        width: 512,
+        height: 512,
+        alt: "Sunita Sharma Embroidery Works logo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Shawl Embroidery Services in India",
     description:
       "SSEW offers industrial shawl and scarf embroidery services with bulk capacity, custom designs, and trade pricing.",
+    images: ["/Screenshot_4.png"],
   },
 };
 
@@ -52,6 +61,7 @@ const localBusinessSchema = {
     },
   ],
   url: "https://www.ssew.in",
+  logo: "https://www.ssew.in/Screenshot_4.png",
 };
 
 export default function Home() {

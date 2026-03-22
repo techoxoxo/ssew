@@ -65,9 +65,9 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
+    icon: "/Screenshot_4.png",
+    shortcut: "/Screenshot_4.png",
+    apple: "/Screenshot_4.png",
   },
 };
 
@@ -77,7 +77,7 @@ const organizationSchema = {
   name: "Sunita Sharma Embroidery Works",
   alternateName: "SSEW",
   url: "https://www.ssew.in",
-  logo: "https://www.ssew.in/favicon.ico",
+  logo: "https://www.ssew.in/Screenshot_4.png",
   email: "satish.ms411@gmail.com",
   telephone: "+91-9915184606",
   address: {
