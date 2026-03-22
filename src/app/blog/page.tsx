@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import { getPublishedBlogs } from "@/lib/blogs-db";
 import styles from "./blog.module.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Blog",
   description:

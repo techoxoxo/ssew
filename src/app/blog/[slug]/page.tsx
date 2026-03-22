@@ -3,8 +3,10 @@ import Image from "next/image";
 import Script from "next/script";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPublishedBlogBySlug, getPublishedBlogSlugs } from "@/lib/blogs-db";
+import { getPublishedBlogBySlug } from "@/lib/blogs-db";
 import styles from "../blog.module.css";
+
+export const dynamic = "force-dynamic";
 
 type Params = { slug: string };
 
@@ -52,11 +54,6 @@ export async function generateMetadata({
       images: post.coverImageUrl ? [post.coverImageUrl] : undefined,
     },
   };
-}
-
-export async function generateStaticParams() {
-  const slugs = await getPublishedBlogSlugs(500);
-  return slugs.map((slug) => ({ slug }));
 }
 
 function dateLabel(value: Date | null) {
