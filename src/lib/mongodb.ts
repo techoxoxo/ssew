@@ -1,6 +1,12 @@
 import { MongoClient } from "mongodb";
 
-const options = {};
+const options = {
+  maxPoolSize: 10,
+  minPoolSize: 0,
+  serverSelectionTimeoutMS: 10000,
+  connectTimeoutMS: 10000,
+  socketTimeoutMS: 20000,
+};
 
 declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
@@ -13,14 +19,10 @@ export default function getMongoClientPromise(): Promise<MongoClient> {
     throw new Error("Please define MONGODB_URI in your environment variables.");
   }
 
-  if (process.env.NODE_ENV === "development") {
-    if (!global._mongoClientPromise) {
-      const client = new MongoClient(uri, options);
-      global._mongoClientPromise = client.connect();
-    }
-    return global._mongoClientPromise;
+  if (!global._mongoClientPromise) {
+    const client = new MongoClient(uri, options);
+    global._mongoClientPromise = client.connect();
   }
 
-  const client = new MongoClient(uri, options);
-  return client.connect();
+  return global._mongoClientPromise;
 }

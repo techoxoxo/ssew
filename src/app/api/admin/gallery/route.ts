@@ -33,9 +33,15 @@ export async function GET() {
       },
     );
   } catch (error) {
+    console.error("GET /api/admin/gallery failed:", error);
     return NextResponse.json(
-      { message: error instanceof Error ? error.message : "Failed to fetch gallery" },
-      { status: 500 },
+      { items: [], message: "Gallery temporarily unavailable." },
+      {
+        status: 200,
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        },
+      },
     );
   }
 }

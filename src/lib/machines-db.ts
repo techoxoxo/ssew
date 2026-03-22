@@ -1,5 +1,6 @@
-import { MongoClient, Db, ObjectId, Collection } from "mongodb";
+import { Db, ObjectId, Collection } from "mongodb";
 import type { Machine } from "./machines";
+import getMongoClientPromise from "@/lib/mongodb";
 
 type MachineDoc = Omit<Machine, "_id"> & {
   _id?: ObjectId;
@@ -19,8 +20,7 @@ async function connectDb(): Promise<Db> {
     throw new Error("Missing MongoDB environment variables");
   }
 
-  const client = new MongoClient(mongoUri);
-  await client.connect();
+  const client = await getMongoClientPromise();
   cachedDb = client.db(mongoDb);
   return cachedDb;
 }
@@ -65,7 +65,8 @@ export async function updateMachine(
   updates: Partial<Machine>,
 ): Promise<boolean> {
   const col = await getMachinesCollection();
-  const { _id, ...safeUpdates } = updates;
+  const safeUpdates = { ...updates };
+  delete safeUpdates._id;
   const result = await col.updateOne(
     { _id: new ObjectId(id) },
     {

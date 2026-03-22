@@ -25,9 +25,15 @@ export async function GET() {
       },
     );
   } catch (error) {
+    console.error("GET /api/admin/machines failed:", error);
     return NextResponse.json(
-      { message: error instanceof Error ? error.message : "Failed to fetch machines" },
-      { status: 500 },
+      { machines: [], message: "Machines temporarily unavailable." },
+      {
+        status: 200,
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        },
+      },
     );
   }
 }
