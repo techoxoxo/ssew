@@ -21,7 +21,10 @@ export default function getMongoClientPromise(): Promise<MongoClient> {
 
   if (!global._mongoClientPromise) {
     const client = new MongoClient(uri, options);
-    global._mongoClientPromise = client.connect();
+    global._mongoClientPromise = client.connect().catch((error) => {
+      global._mongoClientPromise = undefined;
+      throw error;
+    });
   }
 
   return global._mongoClientPromise;
