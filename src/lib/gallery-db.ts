@@ -1,5 +1,11 @@
-import { MongoClient, Db, ObjectId } from "mongodb";
+import { MongoClient, Db, ObjectId, Collection } from "mongodb";
 import type { GalleryItem } from "./gallery";
+
+type GalleryDoc = Omit<GalleryItem, "_id"> & {
+  _id?: ObjectId;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
 
 let cachedDb: Db | null = null;
 
@@ -19,20 +25,29 @@ async function connectDb(): Promise<Db> {
   return cachedDb;
 }
 
-async function getGalleryCollection() {
+function toGalleryItem(doc: GalleryDoc): GalleryItem {
+  const { _id, ...rest } = doc;
+  return {
+    ...rest,
+    _id: _id?.toString(),
+  };
+}
+
+async function getGalleryCollection(): Promise<Collection<GalleryDoc>> {
   const db = await connectDb();
-  return db.collection("gallery");
+  return db.collection<GalleryDoc>("gallery");
 }
 
 export async function getAllGalleryItems(): Promise<GalleryItem[]> {
   const col = await getGalleryCollection();
-  return col.find({}).sort({ order: 1 }).toArray() as Promise<GalleryItem[]>;
+  const items = await col.find({}).sort({ order: 1 }).toArray();
+  return items.map(toGalleryItem);
 }
 
 export async function getGalleryItemById(id: string): Promise<GalleryItem | null> {
   const col = await getGalleryCollection();
   const item = await col.findOne({ _id: new ObjectId(id) });
-  return item as GalleryItem | null;
+  return item ? toGalleryItem(item) : null;
 }
 
 export async function createGalleryItem(item: Omit<GalleryItem, "_id">): Promise<string> {
@@ -50,11 +65,12 @@ export async function updateGalleryItem(
   updates: Partial<GalleryItem>,
 ): Promise<boolean> {
   const col = await getGalleryCollection();
+  const { _id, ...safeUpdates } = updates;
   const result = await col.updateOne(
     { _id: new ObjectId(id) },
     {
       $set: {
-        ...updates,
+        ...safeUpdates,
         updatedAt: new Date(),
       },
     },

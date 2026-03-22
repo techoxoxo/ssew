@@ -1,5 +1,11 @@
-import { MongoClient, Db, ObjectId } from "mongodb";
+import { MongoClient, Db, ObjectId, Collection } from "mongodb";
 import type { Machine } from "./machines";
+
+type MachineDoc = Omit<Machine, "_id"> & {
+  _id?: ObjectId;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
 
 let cachedDb: Db | null = null;
 
@@ -19,20 +25,29 @@ async function connectDb(): Promise<Db> {
   return cachedDb;
 }
 
-async function getMachinesCollection() {
+function toMachine(doc: MachineDoc): Machine {
+  const { _id, ...rest } = doc;
+  return {
+    ...rest,
+    _id: _id?.toString(),
+  };
+}
+
+async function getMachinesCollection(): Promise<Collection<MachineDoc>> {
   const db = await connectDb();
-  return db.collection("machines");
+  return db.collection<MachineDoc>("machines");
 }
 
 export async function getAllMachines(): Promise<Machine[]> {
   const col = await getMachinesCollection();
-  return col.find({}).sort({ order: 1 }).toArray() as Promise<Machine[]>;
+  const machines = await col.find({}).sort({ order: 1 }).toArray();
+  return machines.map(toMachine);
 }
 
 export async function getMachineById(id: string): Promise<Machine | null> {
   const col = await getMachinesCollection();
   const item = await col.findOne({ _id: new ObjectId(id) });
-  return item as Machine | null;
+  return item ? toMachine(item) : null;
 }
 
 export async function createMachine(machine: Omit<Machine, "_id">): Promise<string> {
@@ -50,11 +65,12 @@ export async function updateMachine(
   updates: Partial<Machine>,
 ): Promise<boolean> {
   const col = await getMachinesCollection();
+  const { _id, ...safeUpdates } = updates;
   const result = await col.updateOne(
     { _id: new ObjectId(id) },
     {
       $set: {
-        ...updates,
+        ...safeUpdates,
         updatedAt: new Date(),
       },
     },
