@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ServerApiVersion } from "mongodb";
 
 const options = {
   maxPoolSize: 10,
@@ -6,6 +6,14 @@ const options = {
   serverSelectionTimeoutMS: 10000,
   connectTimeoutMS: 10000,
   socketTimeoutMS: 20000,
+  family: 4,
+  tls: true,
+  retryWrites: true,
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: false,
+    deprecationErrors: false,
+  },
 };
 
 declare global {
@@ -13,7 +21,7 @@ declare global {
 }
 
 export default function getMongoClientPromise(): Promise<MongoClient> {
-  const uri = process.env.MONGODB_URI;
+  const uri = process.env.MONGODB_URI?.trim().replace(/^"|"$/g, "");
 
   if (!uri) {
     throw new Error("Please define MONGODB_URI in your environment variables.");
